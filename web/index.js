@@ -51,6 +51,15 @@ app.get("/api/products/list", async (req, res) => {
   res.status(200).send(data);
 })
 
+app.get("/api/orders/list", async (req, res) => {
+  const data = await shopify.api.rest.Order.all({
+    session: res.locals.shopify.session,
+    limit: 2
+  })
+
+  res.status(200).send(data)
+})
+
 app.get("/api/products/create", async (_req, res) => {
   let status = 200;
   let error = null;

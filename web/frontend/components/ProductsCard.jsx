@@ -44,6 +44,15 @@ export function ProductsCard() {
       }).catch(err => {
         console.log(err)
       })
+
+    // testing orders and pagination
+    fetch("/api/orders/list").then(res => {
+      res.json().then(value => {
+        console.log(value)
+      }).catch(err => {
+        console.log(err)
+      })
+    })
   }, [])
 
   const handleMoreProductsButtonClick = () => {
