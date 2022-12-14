@@ -99,6 +99,7 @@ export function ProductsCard() {
         }}
       >
         <TextContainer spacing="loose">
+          Hello world
           <p>
             Sample products are created with a default title and price. You can
             remove them at any time.
