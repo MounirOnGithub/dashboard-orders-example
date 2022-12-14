@@ -13,6 +13,7 @@ export function ProductsCard() {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
+  const [products, setProducts] = useState([])
   const fetch = useAuthenticatedFetch();
 
   const {
@@ -33,10 +34,16 @@ export function ProductsCard() {
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
-  const { data: productsData } = useAppQuery({
-    url: "/api/products/list",
-    reactQueryOptions: {}
-  })
+  useEffect( () => {
+    fetch("/api/products/list").then(res => {
+        res.json().then(val => {
+          setProducts(val)
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+  }, [])
+
 
   const handlePopulate = async () => {
     setIsLoading(true);
@@ -80,15 +87,17 @@ export function ProductsCard() {
             </DisplayText>
           </Heading>
 
-          {
-            productsData.map(p => {
-              return (
-                  <div>
+          <div>
+            {
+              products.map(p => {
+                return (
+                  <div key={p.id}>
                     {p.id} - {p.title}
                   </div>
-              )
-            })
-          }
+                )
+              })
+            }
+          </div>
 
         </TextContainer>
       </Card>
