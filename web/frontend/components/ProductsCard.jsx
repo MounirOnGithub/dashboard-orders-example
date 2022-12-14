@@ -13,7 +13,8 @@ export function ProductsCard() {
   const emptyToastProps = { content: null };
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [lastProduct, setLastProduct] = useState({});
   const fetch = useAuthenticatedFetch();
 
   const {
@@ -38,12 +39,27 @@ export function ProductsCard() {
     fetch("/api/products/list").then(res => {
         res.json().then(val => {
           setProducts(val)
+          setLastProduct(val[val.length-1])
         })
       }).catch(err => {
         console.log(err)
       })
   }, [])
 
+  const handleMoreProductsButtonClick = () => {
+    fetch(`/api/products/list?sinceId=${lastProduct.id}`).then(res => {
+      res.json().then(val => {
+        // if there is no more products to display
+        if (val.length > 0) {
+          const addedProducts = products.concat(val)
+          setProducts(addedProducts)
+          setLastProduct(val[val.length-1])
+        }
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   const handlePopulate = async () => {
     setIsLoading(true);
@@ -89,14 +105,20 @@ export function ProductsCard() {
 
           <div>
             {
-              products.map(p => {
+              products.map((p,index) => {
                 return (
-                  <div key={p.id}>
+                  <div key={index}>
                     {p.id} - {p.title}
                   </div>
                 )
               })
             }
+          </div>
+
+          <div>
+            <button onClick={handleMoreProductsButtonClick}>
+              Afficher plus de produit
+            </button>
           </div>
 
         </TextContainer>

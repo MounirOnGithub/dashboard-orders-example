@@ -42,10 +42,12 @@ app.get("/api/products/count", async (_req, res) => {
 });
 
 app.get("/api/products/list", async (req, res) => {
+  const sinceId = req.query.sinceId;
   const data = await shopify.api.rest.Product.all({
     session: res.locals.shopify.session,
+    since_id: sinceId || '',
   });
-  console.log(data)
+
   res.status(200).send(data);
 })
 
